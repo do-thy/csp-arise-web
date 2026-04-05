@@ -5,11 +5,9 @@ body {
   padding: 0;
   min-height: 100vh;
   font-family:'Poppins', sans-serif;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
   background-color: #fef5f7;
+  overflow: hidden;
 }
 
 html, body {
@@ -17,17 +15,17 @@ html, body {
 }
 
 .main-container {
-  width: 1400px;
-  height: 800px;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 
-  border-radius: 20px;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
 
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-  background-color: #fffbfb;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .navbar {
