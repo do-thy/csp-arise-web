@@ -2,18 +2,56 @@
 
 import Image from "next/image";
 import google from "@/public/google.png";
-import admin from "@/public/admin.png";
-import { signIn, signOut } from "next-auth/react";
-
-/* wewewewewwewewe */
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { signOut as firebaseSignOut } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../lib/firebase";
+import { useRouter } from "next/navigation";
 
 export function SignIn() {
+  const router = useRouter();
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+
+      const user = result.user;
+
+      // 🔥 Check if user exists in Firestore
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      // If new user → create default role
+      if (!docSnap.exists()) {
+        await setDoc(docRef, {
+          email: user.email,
+          role: "user",
+        });
+      }
+
+      const role = docSnap.exists()
+        ? docSnap.data().role
+        : "user";
+
+      // ✅ Redirect
+      if (role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+
+    } catch (error) {
+      console.log(error);
+      alert("Google login failed");
+    }
+  };
+
   return (
     <button
-      onClick={() =>
-        signIn("google")
-      }
-      className="w-65 py-3 rounded-xl border border-[#e5bcbc] bg-[#f4cfcf] flex items-center justify-center gap-2 font-normal hover:bg-[#e9bcbc] transition"
+      onClick={handleGoogleLogin}
+      className="w-full bg-white text-black py-2 rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition"
     >
       <Image src={google} alt="Google" width={18} height={18} />
       Continue with Google
@@ -21,24 +59,77 @@ export function SignIn() {
   );
 }
 
-
-export function AdminSignInButton() {
-  return (
-    <button 
-      className="w-65 mt-3 py-3 rounded-xl bg-[#f4cfcf] flex items-center justify-center gap-2 font-normal hover:bg-[#e9bcbc] transition">
-      <Image src={admin} alt="Admin" width={18} height={18} />
-      Continue as Admin
-    </button>
-  );
-} 
-
 export function SignOut() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await firebaseSignOut(auth);
+    router.push("/login");
+  };
+
   return (
     <button
-      onClick={() => signOut({ redirectTo: "/login" })}
-      className="w-auto py-3 px-3 rounded-xl border border-[#e5bcbc] bg-[#f4cfcf] flex items-center justify-center gap-2 font-normal text-lg hover:bg-[#e9bcbc] transition"
+      onClick={handleLogout}
+      className="w-auto py-3 px-3 rounded-xl border border-[#e5bcbc] bg-[#f4cfcf] hover:bg-[#e9bcbc] transition"
     >
       SIGN OUT
+    </button>
+  );
+}
+
+interface LoginButtonProps {
+  role: string;
+  email: string;
+  password: string;
+}
+
+export function LoginButton({ role, email, password }: LoginButtonProps) {
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        alert("No user data found");
+        return;
+      }
+
+      const dbRole = docSnap.data().role;
+
+      if (role.toLowerCase() !== dbRole.toLowerCase()) {
+        alert("Invalid role selected");
+        return;
+}
+
+      // ✅ Redirect based on role
+      if (dbRole === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+        return;
+      }
+
+    } catch (error) {
+      alert("Invalid email or password");
+    }
+  };
+
+  return (
+    <button
+      onClick={handleLogin}
+      className="w-full bg-[#A12124] hover:bg-[#811a1d] transition rounded-lg py-2 font-semibold"
+    >
+      Log In
     </button>
   );
 }

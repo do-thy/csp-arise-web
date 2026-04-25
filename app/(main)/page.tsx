@@ -1,4 +1,5 @@
 "use client";
+<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import { Search, ChevronDown, User, Maximize } from "lucide-react";
@@ -65,6 +66,28 @@ export default function AriseHomePage() {
     setIsDropdownOpen(false);
   };
 
+=======
+
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../lib/firebase"; // adjust path if needed
+import { useRouter } from "next/navigation";
+
+export default function HomePage() {
+    const router = useRouter();
+
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          router.push("/login");
+        }
+      });
+
+      return () => unsubscribe();
+    }, []);
+>>>>>>> 00cf254 (Redesign login page, adding loging in using login credentials, as well as register page for creating account)
   return (
     <div className="relative h-screen w-screen bg-[#f0f0f0] overflow-hidden font-sans text-black">
       
