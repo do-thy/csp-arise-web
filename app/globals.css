@@ -5,16 +5,10 @@ body {
   padding: 0;
   min-height: 100vh;
   font-family:'Poppins', sans-serif;
-<<<<<<< HEAD
-  width: 100%;
-  background-color: #fef5f7;
-  overflow: hidden;
-=======
 
   background-image: url(/SDCA_background.png);
   background-size: cover;
   background-position: center;
->>>>>>> 00cf254 (Redesign login page, adding loging in using login credentials, as well as register page for creating account)
 }
 
 html, body {
