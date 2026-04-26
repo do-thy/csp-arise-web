@@ -26,19 +26,50 @@ export default function HomePage() {
 
   if (loading) return null;
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-white al">
-      
-      <h1 className="text-3xl font-bold mb-4 text-black/80">
-        MIMIC HOMEPAGE
-      </h1>
+    return (
+    <div className="relative w-full h-screen overflow-hidden">
 
-      <p className="mb-6 text-white/70">
-        Logged in as: {user?.email}
-      </p>
+      {/* 🌫️ Blur overlay */}
+      <div className="absolute inset-0 backdrop-blur-md bg-black/40 z-10" />
 
-      <SignOut />
+      {/* 🧩 CENTER CONTAINER */}
+      <div className="relative z-20 flex items-center justify-center h-full">
 
+        <div className="w-[90%] max-w-[1100px] h-[700px] flex flex-col items-center justify-center rounded-2xl shadow-2xl shadow-black/40 border border-white/20 bg-black/30 backdrop-blur-xl">
+
+          {/* TITLE */}
+          <h1 className="text-[70px] font-extrabold tracking-[6px] text-white mb-10">
+            ARISE
+          </h1>
+
+          {/* BUTTONS */}
+          <div className="flex flex-col gap-5">
+
+            <button
+              onClick={() => router.push("/map3d/digicampus")}
+              className="px-10 py-3 rounded-full bg-[#A12124] hover:bg-[#811a1d] hover:scale-105 hover:text-white transition text-lg border border-white/20"
+            >
+              3D MAP
+            </button>
+
+            <button
+              onClick={() => router.push("/map2d/digicampus")}
+              className="px-10 py-3 rounded-full bg-[#A12124] hover:bg-[#811a1d] hover:scale-105 hover:text-white transition text-lg border border-white/20"
+            >
+              2D MAP
+            </button>
+
+            <button
+              onClick={() => router.push("/search")}
+              className="px-10 py-3 rounded-full bg-[#A12124] hover:bg-[#811a1d] hover:scale-105 hover:text-white transition text-lg border border-white/20"
+            >
+              ROOM SEARCH
+            </button>
+
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 }

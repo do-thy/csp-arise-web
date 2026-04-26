@@ -129,18 +129,6 @@ html, body {
   transform: translateY(-2px);
 }
 
-.content-container {
-  width: 1200px;
-  height: 640px;
-  margin-top: 30px;
-  background-color: none;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-}
-
 
 
 

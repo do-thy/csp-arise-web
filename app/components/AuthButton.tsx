@@ -51,7 +51,7 @@ export function SignIn() {
   return (
     <button
       onClick={handleGoogleLogin}
-      className="w-full bg-white text-black py-2 rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition"
+      className="w-full bg-white text-black font-semibold hover:bg-[#811a1d] py-2 rounded-lg flex items-center justify-center gap-2 hover:scale-98 hover:text-white transition"
     >
       <Image src={google} alt="Google" width={18} height={18} />
       Continue with Google
