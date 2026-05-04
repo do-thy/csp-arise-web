@@ -14,11 +14,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
 
-  // 🔥 Prevent login loop (already logged in → redirect)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.push("/");
+        router.push("/map3d/digicampus");
       }
     });
 
@@ -26,42 +25,64 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full min-h-screen overflow-y-auto">
 
       {/* 🌫️ Blur overlay */}
       <div className="absolute inset-0 backdrop-blur-md bg-black/40 z-10" />
 
       {/* 🧩 CENTER CONTAINER */}
-      <div className="relative z-20 flex items-center justify-center h-full">
+      <div className="relative z-20 flex items-center justify-center min-h-screen px-4 py-6">
         
-        <div className="w-[90%] max-w-[1100px] h-[550px] flex rounded-2xl overflow-hidden shadow-2xl shadow-black/40 border border-white/20 bg-black/30 backdrop-blur-xl">
-          
+        <div className="
+          w-full max-w-[1100px]
+          flex flex-col md:flex-row
+          rounded-2xl overflow-hidden
+          shadow-2xl shadow-black/40
+          border border-white/20
+          bg-black/30 backdrop-blur-xl
+        ">
+
           {/* LEFT SIDE */}
-          <div className="flex-1 flex items-center justify-center p-10 border-r border-white/10">
+          <div className="
+            w-full md:flex-1
+            flex items-center justify-center
+            p-6 md:p-10
+            min-h-[300px]
+            border-b md:border-b-0 md:border-r border-white/10
+          ">
             <div className="text-center text-white max-w-[400px]">
-              <div className="w-[120px] h-[120px] bg-white/10 backdrop-blur-md border border-white/20 rounded-xl mx-auto mb-6" />
-              <h1 className="text-5xl font-extrabold tracking-widest mb-4">
+
+              <div className="w-[100px] h-[100px] md:w-[120px] md:h-[120px] bg-white/10 backdrop-blur-md border border-white/20 rounded-xl mx-auto mb-4 md:mb-6" />
+
+              <h1 className="text-3xl md:text-5xl font-extrabold tracking-widest mb-3 md:mb-4">
                 ARISE
               </h1>
-              <p className="text-lg leading-relaxed text-white/70">
+
+              <p className="text-sm md:text-lg leading-relaxed text-white/70">
                 Explore your campus in 3D. Navigate, scan, and discover rooms using AR technology.
               </p>
             </div>
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex-1 flex items-center justify-center p-10">
+          <div className="
+            w-full md:flex-1
+            flex items-center justify-center
+            p-6 md:p-10
+            min-h-[400px]
+          ">
             <div className="w-full max-w-[360px] text-white">
 
-              <h2 className="text-2xl font-semibold text-center mb-2">
+              <h2 className="text-xl md:text-2xl font-semibold text-center mb-2">
                 Continue with ARISE
               </h2>
-              <p className="text-sm text-white/60 text-center mb-6">
+
+              <p className="text-xs md:text-sm text-white/60 text-center mb-6">
                 Sign in to access your account
               </p>
 
               {/* Role Selection */}
-              <div className="flex justify-center gap-6 mb-6">
+              <div className="flex justify-center gap-4 md:gap-6 mb-6 flex-wrap">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
@@ -71,7 +92,7 @@ export default function LoginPage() {
                     onChange={() => setRole("user")}
                     className="accent-[#A12124]"
                   />
-                  <span className="text-sm text-white/80">As User</span>
+                  <span className="text-xs md:text-sm text-white/80">As User</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -83,13 +104,13 @@ export default function LoginPage() {
                     onChange={() => setRole("admin")}
                     className="accent-[#A12124]"
                   />
-                  <span className="text-sm text-white/80">As Admin</span>
+                  <span className="text-xs md:text-sm text-white/80">As Admin</span>
                 </label>
               </div>
 
               {/* Email */}
               <div className="mb-4">
-                <label className="text-sm text-white/70">Email</label>
+                <label className="text-xs md:text-sm text-white/70">Email</label>
                 <input
                   type="email"
                   placeholder="Enter your email"
@@ -101,7 +122,7 @@ export default function LoginPage() {
 
               {/* Password */}
               <div className="mb-2">
-                <label className="text-sm text-white/70">Password</label>
+                <label className="text-xs md:text-sm text-white/70">Password</label>
                 <input
                   type="password"
                   placeholder="Enter your password"
@@ -135,7 +156,7 @@ export default function LoginPage() {
                 <div className="flex-1 h-px bg-white/20"></div>
               </div>
 
-              {/* Google Button */}
+              {/* Google Sign In */}
               <div className="hover:scale-105 active:scale-95 transition">
                 <SignIn />
               </div>

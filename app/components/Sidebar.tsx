@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
-  Home,
   Map,
   Search,
   Layers,
@@ -68,22 +67,6 @@ export default function Sidebar() {
       </div>
 
       <div className="flex flex-col mt-2 gap-1">
-
-        {/* HOMEPAGE */}
-        <button
-          onClick={() => {
-            closeAllDropdowns();
-            router.push("/");
-          }}
-          className={`flex items-center gap-3 py-3 px-4 mx-2 rounded-lg transition ${
-            isActive("/")
-              ? "bg-[#A12124]/80 text-white"
-              : "text-white/70 hover:bg-white/10 hover:text-white"
-          }`}
-        >
-          <Home size={20} />
-          {!collapsed && <span>Homepage</span>}
-        </button>
         
         {/* 3D MAP */}
         <button
@@ -114,7 +97,7 @@ export default function Sidebar() {
         </button>
 
         {collapsed && show3DFloat && (
-          <div className="absolute left-[80px] top-[140px] w-[180px]
+          <div className="absolute left-[80px] top-[88px] w-[180px]
             bg-black/90 backdrop-blur-xl border border-white/10
             rounded-lg shadow-lg p-2 z-50">
 
@@ -198,7 +181,7 @@ export default function Sidebar() {
         </button>
 
         {collapsed && show2DFloat && (
-          <div className="absolute left-[80px] top-[190px] w-[180px]
+          <div className="absolute left-[80px] top-[140px] w-[180px]
             bg-black/90 backdrop-blur-xl border border-white/10
             rounded-lg shadow-lg p-2 z-50">
             
