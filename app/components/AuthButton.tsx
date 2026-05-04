@@ -119,7 +119,7 @@ export function LoginButton({ role, email, password }: LoginButtonProps) {
       if (dbRole === "admin") {
         router.push("/admin");
       } else {
-        router.push("/");
+        router.push("/map3d/digicampus");
         return;
       }
 
