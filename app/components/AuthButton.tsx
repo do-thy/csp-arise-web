@@ -23,11 +23,15 @@ export function SignIn() {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
-      // If new user → create default role
+      // If new user → create full profile
       if (!docSnap.exists()) {
         await setDoc(docRef, {
+          name: user.displayName || "",
+          username: user.displayName || "user",
           email: user.email,
           role: "user",
+          provider: "google",
+          photoURL: user.photoURL || "",
         });
       }
 
@@ -39,7 +43,7 @@ export function SignIn() {
       if (role === "admin") {
         router.push("/admin");
       } else {
-        router.push("/");
+        router.push("/map3d/digicampus");
       }
 
     } catch (error) {

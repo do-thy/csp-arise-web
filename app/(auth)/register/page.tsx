@@ -32,6 +32,8 @@ export default function RegisterPage() {
         username: username,
         email: email,
         role: "user",
+        provider: "email",
+        photoURL: "",
       });
 
       await signOut(auth);
