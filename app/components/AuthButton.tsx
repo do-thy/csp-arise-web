@@ -74,12 +74,12 @@ export function SignOut() {
   return (
     <button
       onClick={handleLogout}
-      className="w-auto py-3 px-3 rounded-xl border border-[#e5bcbc] bg-[#f4cfcf] hover:bg-[#e9bcbc] transition"
+      className="w-auto px-4 py-2 rounded-lg bg-[#A12124] hover:bg-[#811a1d] text-white text-sm transition"
     >
-      SIGN OUT
+      Sign Out
     </button>
-  );
-}
+  )
+;}
 
 interface LoginButtonProps {
   role: string;
