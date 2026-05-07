@@ -7,6 +7,7 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
+import { toast } from "sonner";
 
 export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -18,7 +19,9 @@ export default function ChangePassword() {
       if (!auth.currentUser || !auth.currentUser.email) return;
 
       if (newPassword !== confirmPassword) {
-        alert("New passwords do not match");
+        toast.error("New passwords do not match", {
+        position: "top-center",
+        });
         return;
       }
 
@@ -33,7 +36,9 @@ export default function ChangePassword() {
       //Update password
       await updatePassword(auth.currentUser, newPassword);
 
-      alert("Password updated successfully");
+      toast.success("Password updated successfully", {
+        position: "top-center",
+      });
 
       //reset fields
       setCurrentPassword("");
@@ -42,7 +47,9 @@ export default function ChangePassword() {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
-      alert(errorMessage);
+      toast.error(errorMessage, {
+        position: "top-center",
+      });
     }
   };
 

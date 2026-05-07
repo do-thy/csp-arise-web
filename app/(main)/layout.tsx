@@ -3,6 +3,7 @@
 import "../globals.css";
 import Sidebar from "../components/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
+import { Toaster } from "sonner";
 
 export default function MainLayout({
   children,
@@ -88,6 +89,12 @@ export default function MainLayout({
         <div className="flex-1 bg-[#eeeeee] overflow-auto">
           {children}
         </div>
+
+        <Toaster
+          position="top-right"
+          richColors
+          theme="dark"
+        />
 
       </div>
     </div>

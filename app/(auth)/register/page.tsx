@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
+import { toast, Toaster } from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -37,11 +38,19 @@ export default function RegisterPage() {
       });
 
       await signOut(auth);
-      router.push("/login");
+        toast.success("Account created successfully", {
+          position: "top-center",
+      });
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
 
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Registration failed";
-      alert(message);
+      toast.error(message, {
+        position: "top-center",
+      });
     }
   };
 
@@ -133,6 +142,11 @@ export default function RegisterPage() {
         </div>
 
       </div>
+      <Toaster
+        position="top-center"
+        richColors
+        theme="dark"
+      />
 
     </div>
   );

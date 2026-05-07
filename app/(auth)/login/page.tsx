@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../lib/firebase";
 import { SignIn, LoginButton } from "../../components/AuthButton";
 import Link from "next/link";
+import { Toaster } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -166,6 +167,11 @@ export default function LoginPage() {
 
         </div>
       </div>
+      <Toaster
+        position="top-center"
+        richColors
+        theme="dark"
+      />
     </div>
   );
 }
