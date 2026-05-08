@@ -46,50 +46,57 @@ export default function ChangePassword() {
       setConfirmPassword("");
 
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "An error occurred";
-      toast.error(errorMessage, {
-        position: "top-center",
-      });
+      const err = error as { code?: string };
+
+      if (err.code === "auth/invalid-credential") {
+        toast.error("Current password is incorrect", {
+          position: "top-center",
+        });
+      } else {
+        toast.error("Failed to update password", {
+          position: "top-center",
+        });
+      }
     }
   };
 
-  return (
-    <div className="space-y-3">
-      <h4 className="text-white font-semibold">Change Password</h4>
+    return (
+      <div className="space-y-3">
+        <h4 className="text-white font-semibold">Change Password</h4>
 
-      {/* Current Password */}
-      <input
-        type="password"
-        placeholder="Current password"
-        value={currentPassword}
-        onChange={(e) => setCurrentPassword(e.target.value)}
-        className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white outline-none"
-      />
+        {/* Current Password */}
+        <input
+          type="password"
+          placeholder="Current password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white outline-none"
+        />
 
-      {/* New Password */}
-      <input
-        type="password"
-        placeholder="New password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white outline-none"
-      />
+        {/* New Password */}
+        <input
+          type="password"
+          placeholder="New password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white outline-none"
+        />
 
-      {/* Confirm Password */}
-      <input
-        type="password"
-        placeholder="Confirm new password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white outline-none"
-      />
+        {/* Confirm Password */}
+        <input
+          type="password"
+          placeholder="Confirm new password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white outline-none"
+        />
 
-      <button
-        onClick={handleChangePassword}
-        className="bg-[#A12124] hover:bg-[#811a1d] px-4 py-2 rounded-lg text-white text-sm"
-      >
-        Update Password
-      </button>
-    </div>
+        <button
+          onClick={handleChangePassword}
+          className="bg-[#A12124] hover:bg-[#811a1d] px-4 py-2 rounded-lg text-white text-sm"
+        >
+          Update Password
+        </button>
+      </div>
   );
 }

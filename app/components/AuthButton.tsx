@@ -20,11 +20,11 @@ export function SignIn() {
 
       const user = result.user;
 
-      // 🔥 Check if user exists in Firestore
+      //Check if user exists in Firestore
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
-      // If new user → create full profile
+      //If new user → create full profile
       if (!docSnap.exists()) {
         await setDoc(docRef, {
           name: user.displayName || "",
@@ -40,18 +40,24 @@ export function SignIn() {
         ? docSnap.data().role
         : "user";
 
-      // ✅ Redirect
-      if (role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/map3d/digicampus");
-      }
+      //Redirect
+      toast.success("Google sign in successful", {
+        position: "top-center",
+      });
 
-    } catch (error) {
-      console.log(error);
-      toast.error("Google login failed");
-    }
-  };
+      setTimeout(() => {
+          if (role === "admin") {
+            router.push("/admin");
+          } else {
+            router.push("/map3d/digicampus");
+          }
+        }, 1000);
+
+        } catch (error) {
+          console.log(error);
+          toast.error("Google login failed");
+        }
+      };
 
   return (
     <button
