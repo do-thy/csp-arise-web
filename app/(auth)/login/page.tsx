@@ -1,39 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../lib/firebase";
-import { SignIn, LoginButton } from "../../components/AuthButton";
-import Link from "next/link";
+import { useState } from "react";
 import { Toaster } from "sonner";
 
+import { SignIn, LoginButton } from "../../components/AuthButton";
+
+import Link from "next/link";
+
 export default function LoginPage() {
-  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push("/map3d/digicampus");
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   return (
     <div className="relative w-full min-h-screen overflow-y-auto">
 
-      {/* 🌫️ Blur overlay */}
+      {/* Blur Overlay */}
       <div className="absolute inset-0 backdrop-blur-md bg-black/40 z-10" />
 
-      {/* 🧩 CENTER CONTAINER */}
+      {/* Main Container */}
       <div className="relative z-20 flex items-center justify-center min-h-screen px-4 py-6">
-        
+
         <div className="
           w-full max-w-[1100px]
           flex flex-col md:flex-row
@@ -51,6 +39,7 @@ export default function LoginPage() {
             min-h-[300px]
             border-b md:border-b-0 md:border-r border-white/10
           ">
+
             <div className="text-center text-white max-w-[400px]">
 
               <div className="w-[100px] h-[100px] md:w-[120px] md:h-[120px] bg-white/10 backdrop-blur-md border border-white/20 rounded-xl mx-auto mb-4 md:mb-6" />
@@ -62,6 +51,7 @@ export default function LoginPage() {
               <p className="text-sm md:text-lg leading-relaxed text-white/70">
                 Explore your campus in 3D. Navigate, scan, and discover rooms using AR technology.
               </p>
+
             </div>
           </div>
 
@@ -72,6 +62,7 @@ export default function LoginPage() {
             p-6 md:p-10
             min-h-[400px]
           ">
+
             <div className="w-full max-w-[360px] text-white">
 
               <h2 className="text-xl md:text-2xl font-semibold text-center mb-2">
@@ -84,6 +75,7 @@ export default function LoginPage() {
 
               {/* Role Selection */}
               <div className="flex justify-center gap-4 md:gap-6 mb-6 flex-wrap">
+
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
@@ -93,7 +85,10 @@ export default function LoginPage() {
                     onChange={() => setRole("user")}
                     className="accent-[#A12124]"
                   />
-                  <span className="text-xs md:text-sm text-white/80">As User</span>
+
+                  <span className="text-xs md:text-sm text-white/80">
+                    As User
+                  </span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -105,13 +100,21 @@ export default function LoginPage() {
                     onChange={() => setRole("admin")}
                     className="accent-[#A12124]"
                   />
-                  <span className="text-xs md:text-sm text-white/80">As Admin</span>
+
+                  <span className="text-xs md:text-sm text-white/80">
+                    As Admin
+                  </span>
                 </label>
+
               </div>
 
               {/* Email */}
               <div className="mb-4">
-                <label className="text-xs md:text-sm text-white/70">Email</label>
+
+                <label className="text-xs md:text-sm text-white/70">
+                  Email
+                </label>
+
                 <input
                   type="email"
                   placeholder="Enter your email"
@@ -119,11 +122,16 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full mt-1 px-4 py-2 rounded-lg bg-white/30 border border-white/40 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-[#A12124]"
                 />
+
               </div>
 
               {/* Password */}
               <div className="mb-2">
-                <label className="text-xs md:text-sm text-white/70">Password</label>
+
+                <label className="text-xs md:text-sm text-white/70">
+                  Password
+                </label>
+
                 <input
                   type="password"
                   placeholder="Enter your password"
@@ -131,9 +139,11 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full mt-1 px-4 py-2 rounded-lg bg-white/30 border border-white/40 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-[#A12124]"
                 />
+
               </div>
 
               <div className="flex justify-between mb-4">
+
                 <Link href="/register">
                   <span className="text-xs text-[#f36062] cursor-pointer hover:underline">
                     Register?
@@ -145,21 +155,32 @@ export default function LoginPage() {
                     Forgot password?
                   </span>
                 </Link>
+
               </div>
 
               {/* Login Button */}
-              <LoginButton role={role} email={email} password={password} />
+              <LoginButton
+                role={role}
+                email={email}
+                password={password}
+              />
 
               {/* Divider */}
               <div className="flex items-center gap-2 my-4">
+
                 <div className="flex-1 h-px bg-white/20"></div>
-                <span className="text-xs text-white/50">OR</span>
+
+                <span className="text-xs text-white/50">
+                  OR
+                </span>
+
                 <div className="flex-1 h-px bg-white/20"></div>
+
               </div>
 
               {/* Google Sign In */}
               <div className="hover:scale-105 active:scale-95 transition">
-                <SignIn />
+                <SignIn role={role} />
               </div>
 
             </div>
@@ -167,11 +188,13 @@ export default function LoginPage() {
 
         </div>
       </div>
+
       <Toaster
         position="top-center"
         richColors
         theme="dark"
       />
+
     </div>
   );
 }
