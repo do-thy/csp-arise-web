@@ -1,7 +1,7 @@
 "use client";
 
-import "../globals.css";
-import Sidebar from "../components/Sidebar";
+import "@/app/globals.css";
+import Sidebar from "@/app/components/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function MainLayout({

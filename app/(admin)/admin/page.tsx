@@ -1,13 +1,13 @@
-import styles from "./admin.module.css";
+import styles from "@/app/(admin)/admin/admin.module.css";
 import Image from "next/image";
-import universityIcon from "./image/college.png";
-import buildingIcon from "./image/building.png";
-import floorIcon from "./image/multistorey.png";
-import roomIcon from "./image/classroom.png";
-import modelIcon from "./image/3d-modeling.png";
-import mainCampus from "./image/mainCampus.png";
-import digiCampus from "./image/digiCampus.png";
-import update from "./image/changes.png";
+import universityIcon from "@/app/(admin)/admin/image/college.png";
+import buildingIcon from "@/app/(admin)/admin/image/building.png";
+import floorIcon from "@/app/(admin)/admin/image/multistorey.png";
+import roomIcon from "@/app/(admin)/admin/image/classroom.png";
+import modelIcon from "@/app/(admin)/admin/image/3d-modeling.png";
+import mainCampus from "@/app/(admin)/admin/image/mainCampus.png";
+import digiCampus from "@/app/(admin)/admin/image/digiCampus.png";
+import update from "@/app/(admin)/admin/image/changes.png";
 
 
 export default function AdminPage() {
