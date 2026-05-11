@@ -25,7 +25,7 @@ export default function NotFound() {
 
   const handleReturn = () => {
     if (isAuthenticated) {
-      router.push("/map3d/digicampus");
+      router.push("/map3d/maincampus");
     } else {
       router.push("/login");
     }
