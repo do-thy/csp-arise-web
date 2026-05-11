@@ -7,7 +7,7 @@ export default function RootPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/map3d/digicampus");
+    router.replace("/map3d/maincampus");
   }, [router]);
 
   return null;
