@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 // adjust these import paths depending on exactly where your lib and models folders are relative to this file
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/configs/mongodb";
 import Room from "@/models/room";
 
 export async function GET(request: Request) {
