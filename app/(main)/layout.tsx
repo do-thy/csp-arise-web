@@ -14,12 +14,12 @@ export default function MainLayout({
 
   const formatBuilding = (name: string) => {
     if (name === "digicampus") return "DigiCampus";
+    if (name === "maincampus") return "Main Campus";
     return name.toUpperCase(); // gd1 → GD1
   };
 
   //Dynamic title based on route
   const getTitle = () => {
-    if (pathname === "/") return "Homepage";
 
     // 3D MAP
     if (pathname.startsWith("/map3d")) {
@@ -33,19 +33,7 @@ export default function MainLayout({
       return "3D Map";
     }
 
-    // 2D MAP
-    if (pathname.startsWith("/map2d")) {
-      const parts = pathname.split("/");
-      const building = parts[2];
-
-      if (building) {
-        return `2D Map - ${formatBuilding(building)}`;
-      }
-
-      return "2D Map";
-    }
-
-    if (pathname.startsWith("/search")) return "Room Search";
+    if (pathname.startsWith("/direction")) return "Direction";
     if (pathname.startsWith("/profile")) return "Profile";
 
     return "ARISE";
