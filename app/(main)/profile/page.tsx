@@ -37,9 +37,12 @@ export default function ProfilePage() {
   return () => unsubscribe();
 }, []);
 
+  useEffect(() => {
+    document.title = 'ARISE | Profile';
+  }, );
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#020617] p-6 overflow-y-auto">
+    <div className="w-full h-full bg-linear-to-br from-[#0f172a] via-[#1e293b] to-[#020617] p-6 overflow-y-auto">
 
       {/* 🔷 PROFILE HEADER */}
       <div className="w-full bg-slate-800/80 border border-slate-700 shadow-md rounded-xl p-6 mb-6 flex items-center gap-4">

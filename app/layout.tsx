@@ -1,7 +1,10 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "ARISE",
+  title: {
+    default: "ARISE",
+    template: "%s",
+  },
   description: "Campus System",
 };
 
