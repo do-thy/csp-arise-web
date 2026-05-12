@@ -51,18 +51,11 @@ export function SignIn({ role }: SignInProps) {
         ? docSnap.data().role
         : "user";
 
-      // Validate selected role
-      if (role.toLowerCase() !== dbRole.toLowerCase()) {
-
-        await firebaseSignOut(auth);
-
-        toast.error("Invalid role selected", {
-          position: "top-center",
-        });
-
-        router.refresh();
-
-        return;
+      // ✅ Redirect
+      if (role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/map3d/maincampus");
       }
 
       // Success
@@ -167,14 +160,11 @@ export function LoginButton({
       // Validate selected role
       if (role.toLowerCase() !== dbRole.toLowerCase()) {
 
-        await firebaseSignOut(auth);
-
-        toast.error("Invalid role selected", {
-          position: "top-center",
-        });
-
-        router.refresh();
-
+      // ✅ Redirect based on role
+      if (dbRole === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/map3d/maincampus");
         return;
       }
 
