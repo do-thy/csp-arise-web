@@ -3,6 +3,33 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Room from "@/models/room";
 
+type RoomPostBody = {
+  roomName?: string;
+  roomDescription?: string;
+  buildingName?: string;
+  department?: string;
+  ocrSearchTerms?: string[] | string;
+  asset3d?: {
+    equirectangularUrl?: string;
+    modelPath?: string;
+    coordinateX?: number;
+    coordinateY?: number;
+    coordinateZ?: number;
+  };
+};
+
+function normalizeSearchTerms(terms?: string[] | string): string[] {
+  if (!terms) return [];
+  if (Array.isArray(terms)) {
+    return terms.map((term) => term.trim()).filter(Boolean);
+  }
+
+  return terms
+    .split(",")
+    .map((term) => term.trim())
+    .filter(Boolean);
+}
+
 export async function GET(request: Request) {
   try {
     // establish or retrieve the cached database connection
@@ -48,6 +75,99 @@ export async function GET(request: Request) {
     console.error("database routing error:", error);
     return NextResponse.json(
       { error: "internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+function buildAsset3dPayload(asset3d?: RoomPostBody["asset3d"]): Partial<RoomPostBody["asset3d"]> {
+  const payload: Partial<RoomPostBody["asset3d"]> = {};
+
+  if (!asset3d) {
+    return payload;
+  }
+
+  if (asset3d.equirectangularUrl?.trim()) {
+    payload.equirectangularUrl = asset3d.equirectangularUrl.trim();
+  }
+
+  if (asset3d.modelPath?.trim()) {
+    payload.modelPath = asset3d.modelPath.trim();
+  }
+
+  if (asset3d.coordinateX != null) {
+    payload.coordinateX = Number(asset3d.coordinateX);
+  }
+
+  if (asset3d.coordinateY != null) {
+    payload.coordinateY = Number(asset3d.coordinateY);
+  }
+
+  if (asset3d.coordinateZ != null) {
+    payload.coordinateZ = Number(asset3d.coordinateZ);
+  }
+
+  return payload;
+}
+
+export async function POST(request: Request) {
+  try {
+    await dbConnect();
+
+    const body: RoomPostBody = await request.json();
+    const roomName = body.roomName?.trim();
+    const roomDescription = body.roomDescription?.trim();
+    const buildingName = body.buildingName?.trim();
+    const department = body.department?.trim();
+    const cleanedOcrSearchTerms = normalizeSearchTerms(body.ocrSearchTerms);
+
+    if (!roomName || !roomDescription || !buildingName || !department) {
+      return NextResponse.json(
+        { error: "roomName, roomDescription, buildingName, and department are required" },
+        { status: 400 }
+      );
+    }
+
+    const existingRoom = await Room.findOne({
+      roomName: { $regex: new RegExp(`^${roomName}$`, "i") },
+    });
+
+    if (existingRoom) {
+      return NextResponse.json(
+        { error: "a room with this name already exists" },
+        { status: 409 }
+      );
+    }
+
+    const asset3dPayload = buildAsset3dPayload(body.asset3d);
+
+    const roomData: any = {
+      roomName,
+      roomDescription,
+      buildingName,
+      department,
+      ocrSearchTerms: cleanedOcrSearchTerms,
+    };
+
+    if (Object.keys(asset3dPayload).length > 0) {
+      roomData.asset3d = asset3dPayload;
+    }
+
+    const createdRoom = await Room.create(roomData);
+
+    return NextResponse.json({ data: createdRoom }, { status: 201 });
+  } catch (error: any) {
+    console.error("room create error:", error);
+
+    if (error.code === 11000) {
+      return NextResponse.json(
+        { error: "a room with that name already exists" },
+        { status: 409 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: error.message || "internal server error" },
       { status: 500 }
     );
   }
