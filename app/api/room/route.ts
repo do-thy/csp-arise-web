@@ -3,19 +3,30 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Room from "@/models/room";
 
+type RoomAsset3d = {
+  equirectangularUrl?: string;
+  modelPath?: string;
+  coordinateX?: number;
+  coordinateY?: number;
+  coordinateZ?: number;
+};
+
 type RoomPostBody = {
   roomName?: string;
   roomDescription?: string;
   buildingName?: string;
   department?: string;
   ocrSearchTerms?: string[] | string;
-  asset3d?: {
-    equirectangularUrl?: string;
-    modelPath?: string;
-    coordinateX?: number;
-    coordinateY?: number;
-    coordinateZ?: number;
-  };
+  asset3d?: RoomAsset3d;
+};
+
+type RoomCreatePayload = {
+  roomName: string;
+  roomDescription: string;
+  buildingName: string;
+  department: string;
+  ocrSearchTerms: string[];
+  asset3d?: Partial<RoomAsset3d>;
 };
 
 function normalizeSearchTerms(terms?: string[] | string): string[] {
@@ -30,58 +41,167 @@ function normalizeSearchTerms(terms?: string[] | string): string[] {
     .filter(Boolean);
 }
 
+function isDuplicateKeyError(error: unknown): error is { code: number } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === 11000
+  );
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  return "internal server error";
+}
+
 export async function GET(request: Request) {
   try {
-    // establish or retrieve the cached database connection
     await dbConnect();
-
-    // extract the scanned text from the url query parameters 
-    // example: /api/room?scannedText=comp lab 1
     const { searchParams } = new URL(request.url);
-    const scannedText = searchParams.get("scannedText");
+    const roomId = searchParams.get("id")?.trim();
+    const scannedText = searchParams.get("scannedText")?.trim();
 
-    if (!scannedText) {
-      return NextResponse.json(
-        { error: "please provide scanned text in the query parameters" },
-        { status: 400 }
-      );
+    if (roomId) {
+      const room = await Room.findById(roomId);
+      if (!room) {
+        return NextResponse.json({ error: "room not found" }, { status: 404 });
+      }
+      return NextResponse.json({ data: room }, { status: 200 });
     }
 
-    // strip any accidental leading/trailing whitespace from the url parameter
-    const cleanSearchText = scannedText.trim();
+    if (!scannedText) {
+      const rooms = await Room.find({}).sort({ roomName: 1 });
+      return NextResponse.json({ data: rooms }, { status: 200 });
+    }
 
-    // query the database
-    // the regex with "i" makes the search completely case-insensitive
-    // the ^ and $ ensure it matches the entire string, not just a partial substring
     const room = await Room.findOne({
       $or: [
-        { roomName: { $regex: new RegExp(`^${cleanSearchText}$`, "i") } },
-        { ocrSearchTerms: { $regex: new RegExp(`^${cleanSearchText}$`, "i") } },
+        { roomName: { $regex: new RegExp(`^${scannedText}$`, "i") } },
+        { ocrSearchTerms: { $regex: new RegExp(`^${scannedText}$`, "i") } },
       ],
     });
 
-    // handle the "no match found" scenario
     if (!room) {
       return NextResponse.json(
         { error: "no matching room found in the database" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
-    // return the successfully found room document as json
     return NextResponse.json({ data: room }, { status: 200 });
-
   } catch (error) {
     console.error("database routing error:", error);
     return NextResponse.json(
       { error: "internal server error" },
-      { status: 500 }
+      { status: 500 },
+    );
+  }
+}
+export async function PATCH(request: Request) {
+  try {
+    await dbConnect();
+    const { searchParams } = new URL(request.url);
+    const roomId = searchParams.get("id")?.trim();
+
+    if (!roomId) {
+      return NextResponse.json({ error: "room id is required" }, { status: 400 });
+    }
+
+    const body: RoomPostBody = await request.json();
+    const update: Partial<RoomPostBody> = {};
+
+    if (body.roomName?.trim()) {
+      update.roomName = body.roomName.trim();
+    }
+    if (body.roomDescription?.trim()) {
+      update.roomDescription = body.roomDescription.trim();
+    }
+    if (body.buildingName?.trim()) {
+      update.buildingName = body.buildingName.trim();
+    }
+    if (body.department?.trim()) {
+      update.department = body.department.trim();
+    }
+    if (body.ocrSearchTerms != null) {
+      update.ocrSearchTerms = normalizeSearchTerms(body.ocrSearchTerms);
+    }
+    if (body.asset3d) {
+      update.asset3d = buildAsset3dPayload(body.asset3d);
+    }
+
+    if (Object.keys(update).length === 0) {
+      return NextResponse.json({ error: "No update fields provided" }, { status: 400 });
+    }
+
+    if (update.roomName) {
+      const existingRoom = await Room.findOne({
+        roomName: { $regex: new RegExp(`^${update.roomName}$`, "i") },
+        _id: { $ne: roomId },
+      });
+
+      if (existingRoom) {
+        return NextResponse.json(
+          { error: "a room with this name already exists" },
+          { status: 409 },
+        );
+      }
+    }
+
+    const updatedRoom = await Room.findByIdAndUpdate(roomId, update, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedRoom) {
+      return NextResponse.json({ error: "room not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ data: updatedRoom }, { status: 200 });
+  } catch (error: unknown) {
+    console.error("room update error:", error);
+
+    if (isDuplicateKeyError(error)) {
+      return NextResponse.json(
+        { error: "a room with that name already exists" },
+        { status: 409 },
+      );
+    }
+
+    return NextResponse.json(
+      { error: getErrorMessage(error) },
+      { status: 500 },
     );
   }
 }
 
-function buildAsset3dPayload(asset3d?: RoomPostBody["asset3d"]): Partial<RoomPostBody["asset3d"]> {
-  const payload: Partial<RoomPostBody["asset3d"]> = {};
+export async function DELETE(request: Request) {
+  try {
+    await dbConnect();
+    const { searchParams } = new URL(request.url);
+    const roomId = searchParams.get("id")?.trim();
+
+    if (!roomId) {
+      return NextResponse.json({ error: "room id is required" }, { status: 400 });
+    }
+
+    const deletedRoom = await Room.findByIdAndDelete(roomId);
+    if (!deletedRoom) {
+      return NextResponse.json({ error: "room not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ data: deletedRoom }, { status: 200 });
+  } catch (error) {
+    console.error("room delete error:", error);
+    return NextResponse.json(
+      { error: "internal server error" },
+      { status: 500 },
+    );
+  }
+}
+function buildAsset3dPayload(asset3d?: RoomAsset3d): Partial<RoomAsset3d> {
+  const payload: Partial<RoomAsset3d> = {};
 
   if (!asset3d) {
     return payload;
@@ -141,7 +261,7 @@ export async function POST(request: Request) {
 
     const asset3dPayload = buildAsset3dPayload(body.asset3d);
 
-    const roomData: any = {
+    const roomData: RoomCreatePayload = {
       roomName,
       roomDescription,
       buildingName,
@@ -156,10 +276,10 @@ export async function POST(request: Request) {
     const createdRoom = await Room.create(roomData);
 
     return NextResponse.json({ data: createdRoom }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("room create error:", error);
 
-    if (error.code === 11000) {
+    if (isDuplicateKeyError(error)) {
       return NextResponse.json(
         { error: "a room with that name already exists" },
         { status: 409 }
@@ -167,7 +287,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: error.message || "internal server error" },
+      { error: getErrorMessage(error) },
       { status: 500 }
     );
   }
