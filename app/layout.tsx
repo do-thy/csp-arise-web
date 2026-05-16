@@ -1,4 +1,5 @@
 import "./globals.css";
+import MobileAuthTransfer from "@/app/components/MobileAuthTransfer";
 
 export const metadata = {
   title: "ARISE",
@@ -13,6 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <MobileAuthTransfer />
         {children}
       </body>
     </html>

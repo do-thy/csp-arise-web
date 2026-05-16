@@ -11,8 +11,7 @@ import {
 } from "firebase/auth";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
-
-import { auth, db } from "../../lib/firebase";
+import { auth, db } from "@/lib/configs/firebase";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 

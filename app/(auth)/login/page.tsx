@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { Toaster } from "sonner";
 
-import { SignIn, LoginButton } from "../../components/AuthButton";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/configs/firebase";
+import { SignIn, LoginButton } from "@/components/AuthButton";
 
 import Link from "next/link";
 
