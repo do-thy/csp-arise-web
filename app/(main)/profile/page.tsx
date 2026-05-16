@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { SignOut } from "@/app/components/AuthButton";
 import { useEffect, useState } from "react";
-import { auth, db } from "@/lib/firebase";
+import { auth, db } from "@/lib/configs/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import ChangePassword from "@/app/components/ChangePassword";
