@@ -1,19 +1,19 @@
 .adminContainer {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: grid;
-  font-family:'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
 
   grid-template-columns: 260px 1fr;
   grid-template-rows: 1fr;
+  background-color: #f5f5f5;
 }
 
 .sidebar {
   background-color: #1b1b1b;
-  border-right: 1px solid #ddd;
-  padding: 20px 0;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .logo {
@@ -57,7 +57,9 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: transparent;
 }
 
 .header {
@@ -73,9 +75,7 @@
 }
 
 .content {
-  padding: 20px 30px;
-  flex: 1;
-  overflow: auto;
+  padding: 30px;
 }
 
 .cardRow {
@@ -87,16 +87,13 @@
 
 .card {
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
   padding: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 15px; 
+  gap: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .cardText {
@@ -134,17 +131,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  display: flex;
-  justify-content: space-around;
 }
 
 .overviewCard {
-  width: 600px;
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
-
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -205,6 +198,7 @@
   padding: 20px 30px 0 30px;
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .btn {
@@ -221,4 +215,152 @@
 .btn:hover {
   background: #f5f5f5;
   border-color: #999;
+}
+
+@media (max-width: 1024px) {
+  .adminContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .cardRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .adminContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .nav ul {
+    display: flex;
+  }
+
+  .navItem {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .cardRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+  .header {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardRow {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cardText {
+    align-items: flex-start;
+  }
+
+  .overviewCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .btn {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .pageContainer {
+    background-color: #0f1520;
+  }
+
+  .header {
+    background-color: #121a27;
+    border-bottom-color: #1f2d42;
+  }
+
+  .title {
+    color: #f0f4ff;
+  }
+
+  .card {
+    background: #161f2d;
+    border-color: #24314a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .card p {
+    color: #b9c6df;
+  }
+
+  .card h2 {
+    color: #f3f7ff;
+  }
+
+  .section {
+    border-top-color: #1f2d42;
+  }
+
+  .sectionTitle {
+    color: #ecf0ff;
+  }
+
+  .overviewCard {
+    background: #161f2d;
+    border-color: #24314a;
+  }
+
+  .overviewText h3 {
+    color: #f3f7ff;
+  }
+
+  .overviewText p {
+    color: #b9c6df;
+  }
+
+  .section2 {
+    border-top-color: #1f2d42;
+  }
+
+  .section h3 {
+    color: #ecf0ff;
+  }
+
+  .updateItem {
+    color: #d4dae9;
+  }
+
+  .actionButtons {
+    border-top-color: #1f2d42;
+  }
+
+  .btn {
+    background: #1a2433;
+    border-color: #36405a;
+    color: #eef2ff;
+  }
+
+  .btn:hover {
+    background: #2c3a52;
+    border-color: #5b6f95;
+  }
 }
