@@ -1,4 +1,4 @@
-import "./globals.css";
+import "@/app/globals.css";
 import MobileAuthTransfer from "@/app/components/MobileAuthTransfer";
 import { Suspense } from "react";
 

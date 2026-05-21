@@ -1,4 +1,4 @@
-import styles from "./admin.module.css";
+import styles from "@/app/(admin)/admin/admin.module.css";
 import { Poppins } from "next/font/google";
 import AdminSidebar from "./adminsidebar";
 
