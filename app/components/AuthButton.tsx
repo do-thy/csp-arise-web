@@ -54,7 +54,7 @@ export function SignIn({ role }: SignInProps) {
       if (role === "admin") {
         router.push("/admin");
       } else {
-        router.push("/map3d/maincampus");
+        router.push("/map3d");
       }
 
       // Success
@@ -163,7 +163,7 @@ export function LoginButton({
       if (dbRole === "admin") {
         router.push("/admin");
       } else {
-        router.push("/map3d/maincampus");
+        router.push("/map3d");
         return;
       }
 

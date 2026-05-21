@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/configs/mongodb";
 import Room from "@/models/room";
 
 // Defined a strict interface to replace "any" and satisfy TypeScript

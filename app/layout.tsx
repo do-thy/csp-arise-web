@@ -1,5 +1,6 @@
 import "./globals.css";
 import MobileAuthTransfer from "@/app/components/MobileAuthTransfer";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "ARISE",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <MobileAuthTransfer />
+        <Suspense fallback={null}>
+          <MobileAuthTransfer />
+        </Suspense>
         {children}
       </body>
     </html>
