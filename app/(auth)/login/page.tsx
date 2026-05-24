@@ -16,6 +16,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push("/map3d/maincampus");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="relative w-full min-h-screen overflow-y-auto">
 
