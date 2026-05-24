@@ -17,7 +17,7 @@ export default function LoginPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.push("/map3d/digicampus");
+        router.push("/map3d/maincampus");
       }
     });
 

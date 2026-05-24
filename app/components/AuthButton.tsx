@@ -43,7 +43,7 @@ export function SignIn() {
       if (role === "admin") {
         router.push("/admin");
       } else {
-        router.push("/map3d");
+        router.push("/map3d/maincampus");
       }
 
     } catch (error) {
@@ -119,7 +119,7 @@ export function LoginButton({ role, email, password }: LoginButtonProps) {
       if (dbRole === "admin") {
         router.push("/admin");
       } else {
-        router.push("/map3d");
+        router.push("/map3d/maincampus");
         return;
       }
 

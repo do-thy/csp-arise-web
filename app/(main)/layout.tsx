@@ -123,12 +123,32 @@ export default function MainLayout({
       }
     };
 
+    // FIX: Tells Unity to release keystrokes when HTML input textfields gain focus
+    const handleDocumentFocus = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (isLoaded && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        sendMessage("NavigationTest", "SetKeyboardCapture", 0);
+      }
+    };
+
+    // FIX: Restores Unity's keyboard focus when clicking away from input panels
+    const handleDocumentBlur = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (isLoaded && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        sendMessage("NavigationTest", "SetKeyboardCapture", 1);
+      }
+    };
+
     window.addEventListener("arise-navigation", handleNavRequest);
     window.addEventListener("arise-keyboard", handleKeyboardRequest);
+    document.addEventListener("focusin", handleDocumentFocus);
+    document.addEventListener("focusout", handleDocumentBlur);
     
     return () => {
       window.removeEventListener("arise-navigation", handleNavRequest);
       window.removeEventListener("arise-keyboard", handleKeyboardRequest);
+      document.removeEventListener("focusin", handleDocumentFocus);
+      document.removeEventListener("focusout", handleDocumentBlur);
     };
   }, [isLoaded]);
 
@@ -155,15 +175,22 @@ export default function MainLayout({
         <div className="flex-1 relative bg-[#eeeeee] overflow-auto">
           
           {/* Overlay UI Layer */}
-          <div className="absolute inset-0 z-30 pointer-events-none">
-            {/* REMOVED: pointer-events-auto h-full w-full wrapper */}
+          {/* FIX 1: Toggles pointer events natively so profile page captures mouse inputs naturally */}
+          <div 
+            className={`absolute inset-0 z-30 ${
+              showUnity ? "pointer-events-none" : "pointer-events-auto"
+            }`}
+          >
             {children}
           </div>
 
           {/* Underlayer Unity canvas engine block */}
+          {/* FIX 2: Added 'block' vs 'hidden' along with visibility variables */}
           <div 
             className={`absolute inset-0 transition-opacity duration-300 ${
-              showUnity ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
+              showUnity 
+                ? "opacity-100 z-10 pointer-events-auto block" 
+                : "opacity-0 z-0 pointer-events-none hidden"
             }`}
           >
             <Unity unityProvider={unityProvider} className="w-full h-full" />
