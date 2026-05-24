@@ -1,12 +1,12 @@
+// app/login/page.tsx
+
 "use client";
+
+import { useState } from "react";
 
 import { Toaster } from "sonner";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/lib/configs/firebase";
-import { SignIn, LoginButton } from "@/components/AuthButton";
+import { SignIn, LoginButton } from "../../components/AuthButton";
 
 import Link from "next/link";
 
@@ -15,16 +15,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push("/map3d/maincampus");
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   return (
     <div className="relative w-full min-h-screen overflow-y-auto">
@@ -90,6 +80,7 @@ export default function LoginPage() {
               <div className="flex justify-center gap-4 md:gap-6 mb-6 flex-wrap">
 
                 <label className="flex items-center gap-2 cursor-pointer">
+
                   <input
                     type="radio"
                     name="role"
@@ -102,9 +93,11 @@ export default function LoginPage() {
                   <span className="text-xs md:text-sm text-white/80">
                     As User
                   </span>
+
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
+
                   <input
                     type="radio"
                     name="role"
@@ -117,6 +110,7 @@ export default function LoginPage() {
                   <span className="text-xs md:text-sm text-white/80">
                     As Admin
                   </span>
+
                 </label>
 
               </div>

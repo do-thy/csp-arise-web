@@ -11,8 +11,11 @@ import {
 } from "firebase/auth";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
+
 import { auth, db } from "@/lib/configs/firebase";
+
 import { useRouter } from "next/navigation";
+
 import { toast } from "sonner";
 
 interface SignInProps {
@@ -50,11 +53,18 @@ export function SignIn({ role }: SignInProps) {
         ? docSnap.data().role
         : "user";
 
-      // ✅ Redirect
-      if (role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/map3d/maincampus");
+      // Validate selected role
+      if (role.toLowerCase() !== dbRole.toLowerCase()) {
+
+        await firebaseSignOut(auth);
+
+        toast.error("Invalid role selected", {
+          position: "top-center",
+        });
+
+        router.refresh();
+
+        return;
       }
 
       // Success
@@ -63,11 +73,13 @@ export function SignIn({ role }: SignInProps) {
       });
 
       setTimeout(() => {
+
         if (dbRole === "admin") {
           router.push("/admin");
         } else {
           router.push("/map3d/digicampus");
         }
+
       }, 1000);
 
     } catch (error) {
@@ -159,11 +171,14 @@ export function LoginButton({
       // Validate selected role
       if (role.toLowerCase() !== dbRole.toLowerCase()) {
 
-      // ✅ Redirect based on role
-      if (dbRole === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/map3d/maincampus");
+        await firebaseSignOut(auth);
+
+        toast.error("Invalid role selected", {
+          position: "top-center",
+        });
+
+        router.refresh();
+
         return;
       }
 
