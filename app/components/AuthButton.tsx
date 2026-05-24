@@ -2,28 +2,42 @@
 
 import Image from "next/image";
 import google from "@/public/google.png";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { signOut as firebaseSignOut } from "firebase/auth";
+
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+} from "firebase/auth";
+
 import { doc, getDoc, setDoc } from "firebase/firestore";
+
 import { auth, db } from "@/lib/configs/firebase";
+
 import { useRouter } from "next/navigation";
 
-export function SignIn() {
+import { toast } from "sonner";
+
+interface SignInProps {
+  role: string;
+}
+
+export function SignIn({ role }: SignInProps) {
   const router = useRouter();
 
   const handleGoogleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
+
       const result = await signInWithPopup(auth, provider);
 
       const user = result.user;
 
-      // 🔥 Check if user exists in Firestore
+      // Check if user exists in Firestore
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
-      // If new user → create full profile
+      // If new user → create profile
       if (!docSnap.exists()) {
         await setDoc(docRef, {
           name: user.displayName || "",
@@ -35,20 +49,45 @@ export function SignIn() {
         });
       }
 
-      const role = docSnap.exists()
+      const dbRole = docSnap.exists()
         ? docSnap.data().role
         : "user";
 
-      // ✅ Redirect
-      if (role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/map3d/maincampus");
+      // Validate selected role
+      if (role.toLowerCase() !== dbRole.toLowerCase()) {
+
+        await firebaseSignOut(auth);
+
+        toast.error("Invalid role selected", {
+          position: "top-center",
+        });
+
+        router.refresh();
+
+        return;
       }
+
+      // Success
+      toast.success("Google sign in successful", {
+        position: "top-center",
+      });
+
+      setTimeout(() => {
+
+        if (dbRole === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/map3d/digicampus");
+        }
+
+      }, 1000);
 
     } catch (error) {
       console.log(error);
-      alert("Google login failed");
+
+      toast.error("Google login failed", {
+        position: "top-center",
+      });
     }
   };
 
@@ -67,8 +106,16 @@ export function SignOut() {
   const router = useRouter();
 
   const handleLogout = async () => {
+
     await firebaseSignOut(auth);
-    router.push("/login");
+
+    toast.success("Signed out successfully", {
+      position: "top-center",
+    });
+
+    setTimeout(() => {
+      router.push("/login");
+    }, 1000);
   };
 
   return (
@@ -78,8 +125,8 @@ export function SignOut() {
     >
       Sign Out
     </button>
-  )
-;}
+  );
+}
 
 interface LoginButtonProps {
   role: string;
@@ -87,11 +134,18 @@ interface LoginButtonProps {
   password: string;
 }
 
-export function LoginButton({ role, email, password }: LoginButtonProps) {
+export function LoginButton({
+  role,
+  email,
+  password,
+}: LoginButtonProps) {
+
   const router = useRouter();
 
   const handleLogin = async () => {
+
     try {
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -104,27 +158,50 @@ export function LoginButton({ role, email, password }: LoginButtonProps) {
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        alert("No user data found");
+
+        toast.error("No user data found", {
+          position: "top-center",
+        });
+
         return;
       }
 
       const dbRole = docSnap.data().role;
 
+      // Validate selected role
       if (role.toLowerCase() !== dbRole.toLowerCase()) {
-        alert("Invalid role selected");
-        return;
-}
 
-      // ✅ Redirect based on role
-      if (dbRole === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/map3d/maincampus");
+        await firebaseSignOut(auth);
+
+        toast.error("Invalid role selected", {
+          position: "top-center",
+        });
+
+        router.refresh();
+
         return;
       }
 
-    } catch (error) {
-      alert("Invalid email or password");
+      // Success
+      toast.success("Login successful", {
+        position: "top-center",
+      });
+
+      setTimeout(() => {
+
+        if (dbRole === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/map3d/digicampus");
+        }
+
+      }, 1000);
+
+    } catch {
+
+      toast.error("Invalid email or password", {
+        position: "top-center",
+      });
     }
   };
 

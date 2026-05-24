@@ -3,6 +3,7 @@
 import "../globals.css";
 import Sidebar from "../components/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
+import { Toaster } from "sonner";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import { useEffect, useRef, useState } from "react";
 
@@ -306,6 +307,13 @@ export default function MainLayout({
             />
           </div>
         </div>
+
+        <Toaster
+          position="top-right"
+          richColors
+          theme="dark"
+        />
+
       </div>
     </div>
   );
