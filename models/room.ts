@@ -6,13 +6,13 @@ export interface RoomDocument {
   roomDescription: string;
   buildingName: string;
   department: string;
-  ocrSearchTerms: string[];
-  asset3d: {
-    equirectangularUrl: string;
-    modelPath: string;
-    coordinateX: number;
-    coordinateY: number;
-    coordinateZ: number;
+  ocrSearchTerms?: string[];
+  asset3d?: {
+    equirectangularUrl?: string;
+    modelPath?: string;
+    coordinateX?: number;
+    coordinateY?: number;
+    coordinateZ?: number;
   };
 }
 
@@ -48,25 +48,20 @@ const roomSchema = new Schema<RoomDocument>(
     asset3d: {
       equirectangularUrl: {
         type: String,
-        required: [true, "please provide the equirectangular image url"],
       },
       modelPath: {
         type: String,
-        required: [true, "please provide the 3d model path url"],
       },
       coordinateX: {
         type: Number,
-        required: true,
         default: 0,
       },
       coordinateY: {
         type: Number,
-        required: true,
         default: 0,
       },
       coordinateZ: {
         type: Number,
-        required: true,
         default: 0,
       },
     },
