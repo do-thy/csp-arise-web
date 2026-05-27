@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import {
   collection,
   getDocs,
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 
 import { db } from "@/lib/configs/firebase";
@@ -40,6 +42,67 @@ export default function UsersPage() {
     googleUsers: 0,
   });
 
+  // ROLE UPDATE
+  const handleRoleChange = async (
+    userId: string,
+    newRole: string
+  ) => {
+    try {
+      await updateDoc(doc(db, "users", userId), {
+        role: newRole,
+      });
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === userId
+            ? { ...user, role: newRole }
+            : user
+        )
+      );
+
+    } catch (error) {
+      console.error("Error updating role:", error);
+    }
+  };
+
+  // DELETE USER
+  const handleDeleteUser = async (
+    userId: string
+  ) => {
+    try {
+      const response = await fetch(
+        "/api/admin/delete-user",
+        {
+          method: "DELETE",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            uid: userId,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error);
+      }
+
+      setUsers((prevUsers) =>
+        prevUsers.filter(
+          (user) => user.id !== userId
+        )
+      );
+
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
+  // SEARCH FILTER
   const filteredUsers = users.filter((user) => {
     const search = searchTerm.toLowerCase();
 
@@ -50,6 +113,7 @@ export default function UsersPage() {
     );
   });
 
+  // FETCH USERS
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -283,10 +347,21 @@ export default function UsersPage() {
                               : "bg-green-100 text-green-700"
                           }
                         `}
-                        defaultValue={user.role}
+                        value={user.role}
+                        onChange={(e) =>
+                          handleRoleChange(
+                            user.id,
+                            e.target.value
+                          )
+                        }
                       >
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
+                        <option value="admin">
+                          Admin
+                        </option>
+
+                        <option value="user">
+                          User
+                        </option>
                       </select>
                     </div>
                   </td>
@@ -295,6 +370,9 @@ export default function UsersPage() {
                   <td className="rounded-r-2xl px-5 py-5">
                     <div className="flex justify-center">
                       <button
+                        onClick={() =>
+                          handleDeleteUser(user.id)
+                        }
                         className="
                           w-[100px]
                           bg-red-100 hover:bg-red-200

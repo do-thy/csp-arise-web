@@ -22,7 +22,7 @@ export default function AdminPage() {
     nodes: 0,
     rooms: 0,
     models: 9,
-    users: 8,
+    users: 0,
   });
 
   const [campusStats, setCampusStats] = useState({
@@ -51,6 +51,10 @@ export default function AdminPage() {
 
       const mainSnapshot = await getDocs(
         collection(db, "Nodes_Main")
+      );
+
+      const usersSnapshot = await getDocs(
+        collection(db, "users")
       );
 
       const digiBuildings = new Set<string>();
@@ -128,7 +132,7 @@ export default function AdminPage() {
         nodes: allDocs.length,
         rooms: totalRooms,
         models: 9,
-        users: 8,
+        users: usersSnapshot.docs.length
       });
 
       setCampusStats({
