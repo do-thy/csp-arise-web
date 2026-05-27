@@ -12,6 +12,8 @@ import {
   Menu,
   X,
   ChevronDown,
+  MapPinned,
+  Link,
 } from "lucide-react";
 
 interface NavItemProps {
@@ -24,6 +26,7 @@ interface NavItemProps {
 export default function AdminSidebar() {
   const router = useRouter();
   const pathname = usePathname();
+
   const [isOpen, setIsOpen] = useState(false);
   const [showCampuses, setShowCampuses] = useState(false);
 
@@ -31,86 +34,234 @@ export default function AdminSidebar() {
 
   return (
     <>
-      {/* MOBILE TOP BAR - Fixed to Top */}
-      <div className="lg:hidden flex items-center justify-between bg-[#1b1b1b] text-white p-4 sticky top-0 z-[60] w-full">
-        <span className="font-bold tracking-wider">ADMIN CMS</span>
-        <button onClick={() => setIsOpen(!isOpen)} className="p-2 hover:bg-white/10 rounded-md transition">
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+      {/* MOBILE TOP BAR */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-[60] flex items-center justify-between bg-[#111827] border-b border-white/5 px-5 py-4">
+        <div>
+          <h1 className="text-white font-bold tracking-wide">
+            ARISE CMS
+          </h1>
+
+          <p className="text-[11px] text-gray-400">
+            Indoor Navigation System
+          </p>
+        </div>
+
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="p-2 rounded-xl hover:bg-white/5 transition"
+        >
+          {isOpen ? (
+            <X size={22} className="text-white" />
+          ) : (
+            <Menu size={22} className="text-white" />
+          )}
         </button>
       </div>
 
-      {/* SIDEBAR PANEL */}
-      <div className={`
-        fixed inset-y-0 left-0 z-50 w-[260px] bg-[#1b1b1b] transform transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:static lg:block
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
-        
-        {/* Desktop Logo Header */}
-        <div className="hidden lg:flex h-[80px] items-center px-6 border-b border-white/10">
-          <span className="text-lg font-bold tracking-wider text-white">ADMIN CMS</span>
+      {/* SIDEBAR */}
+      <aside
+        className={`
+          fixed top-0 left-0 z-50 h-screen w-[280px]
+          bg-[#111827] border-r border-white/5
+          transform transition-transform duration-300 ease-in-out
+          flex flex-col
+
+          lg:translate-x-0
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
+        {/* LOGO */}
+        <div className="hidden lg:flex h-[90px] items-center px-7 border-b border-white/5">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#A12124] to-[#7f1d1d] flex items-center justify-center shadow-lg shadow-red-900/20">
+              <MapPinned size={24} className="text-white" />
+            </div>
+
+            <div>
+              <h1 className="text-xl font-bold text-white tracking-wide">
+                ARISE CMS
+              </h1>
+
+              <p className="text-xs text-gray-500 mt-1">
+                Indoor Navigation System
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col mt-6 gap-1 px-3">
-          <NavItem 
-            icon={<LayoutDashboard size={20} />} 
-            label="Dashboard" 
-            active={isActive("/admin")} 
-            onClick={() => { router.push("/admin"); setIsOpen(false); }} 
+        {/* NAVIGATION */}
+        <div className="flex flex-col mt-8 gap-2 px-4 h-full overflow-y-auto">
+          <NavItem
+            icon={<LayoutDashboard size={20} />}
+            label="Dashboard"
+            active={isActive("/admin")}
+            onClick={() => {
+              router.push("/admin");
+              setIsOpen(false);
+            }}
           />
 
-          {/* Campuses Dropdown */}
+          {/* CAMPUSES */}
           <div>
             <button
               onClick={() => setShowCampuses(!showCampuses)}
-              className="w-full flex items-center justify-between py-3 px-3 rounded-lg text-white/70 hover:bg-white/10 transition"
+              className="
+                flex items-center justify-between
+                w-full py-3 px-4 rounded-2xl
+                text-gray-400 hover:bg-white/5 hover:text-white
+                transition-all duration-200
+              "
             >
               <div className="flex items-center gap-3">
                 <School size={20} />
-                <span className="text-sm font-medium">Campuses</span>
+                <span className="text-sm font-medium">
+                  Campuses
+                </span>
               </div>
-              <ChevronDown size={16} className={`transition-transform ${showCampuses ? "rotate-180" : ""}`} />
+
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-200 ${
+                  showCampuses ? "rotate-180" : ""
+                }`}
+              />
             </button>
-            
+
             {showCampuses && (
-              <div className="flex flex-col ml-6 mt-1 border-l border-white/10">
-                <button onClick={() => { router.push("/admin/digi"); setIsOpen(false); }} className="text-left py-2 px-4 text-sm text-white/50 hover:text-white transition">DigiCampus</button>
-                <button onClick={() => { router.push("/admin/main"); setIsOpen(false); }} className="text-left py-2 px-4 text-sm text-white/50 hover:text-white transition">Main Campus</button>
+              <div className="ml-6 mt-2 flex flex-col gap-1 border-l border-white/5 pl-4">
+                <button
+                  onClick={() => {
+                    router.push("/admin/digi");
+                    setIsOpen(false);
+                  }}
+                  className="
+                    text-left py-2 px-3 rounded-xl
+                    text-sm text-gray-400
+                    hover:bg-white/5 hover:text-white
+                    transition
+                  "
+                >
+                  DigiCampus
+                </button>
+
+                <button
+                  onClick={() => {
+                    router.push("/admin/main");
+                    setIsOpen(false);
+                  }}
+                  className="
+                    text-left py-2 px-3 rounded-xl
+                    text-sm text-gray-400
+                    hover:bg-white/5 hover:text-white
+                    transition
+                  "
+                >
+                  Main Campus
+                </button>
               </div>
             )}
           </div>
 
-          <NavItem icon={<DoorOpen size={20} />} label="Rooms" active={isActive("/admin/rooms")} onClick={() => { router.push("/admin/rooms"); setIsOpen(false); }} />
-          <NavItem icon={<Box size={20} />} label="3D Models" active={isActive("/admin/models")} onClick={() => { router.push("/admin/models"); setIsOpen(false); }} />
-          <NavItem icon={<Users size={20} />} label="Users" active={isActive("/admin/users")} onClick={() => { router.push("/admin/users"); setIsOpen(false); }} />
-          
-          {/* Settings pushed to bottom on desktop, just below items on mobile */}
-          <div className="lg:mt-auto mb-6 pt-4 lg:border-t lg:border-white/5">
-             <NavItem icon={<Settings size={20} />} label="Settings" active={isActive("/admin/settings")} onClick={() => { router.push("/admin/settings"); setIsOpen(false); }} />
+          <NavItem
+            icon={<DoorOpen size={20} />}
+            label="Rooms"
+            active={isActive("/admin/rooms")}
+            onClick={() => {
+              router.push("/admin/rooms");
+              setIsOpen(false);
+            }}
+          />
+
+          <NavItem
+            icon={<Link size={20} />}
+            label="Links"
+            active={isActive("/admin/links")}
+            onClick={() => {
+              router.push("/admin/links");
+              setIsOpen(false);
+            }}
+          />
+
+          <NavItem
+            icon={<Box size={20} />}
+            label="3D Models"
+            active={isActive("/admin/models")}
+            onClick={() => {
+              router.push("/admin/models");
+              setIsOpen(false);
+            }}
+          />
+
+          <NavItem
+            icon={<Users size={20} />}
+            label="Users"
+            active={isActive("/admin/users")}
+            onClick={() => {
+              router.push("/admin/users");
+              setIsOpen(false);
+            }}
+          />
+
+          {/* SETTINGS */}
+          <div className="mt-auto mb-6 pt-4 border-t border-white/10">
+            <NavItem
+              icon={<Settings size={20} />}
+              label="Settings"
+              active={isActive("/admin/settings")}
+              onClick={() => {
+                router.push("/admin/settings");
+                setIsOpen(false);
+              }}
+            />
           </div>
         </div>
-      </div>
+      </aside>
 
       {/* OVERLAY */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+        <div
+          className="
+            fixed inset-0 z-40
+            bg-black/60 backdrop-blur-sm
+            lg:hidden
+          "
+          onClick={() => setIsOpen(false)}
+        />
       )}
     </>
   );
 }
 
-function NavItem({ icon, label, active, onClick }: NavItemProps) {
+function NavItem({
+  icon,
+  label,
+  active,
+  onClick,
+}: NavItemProps) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-3 w-full py-3 px-3 rounded-lg transition ${
-        active 
-          ? "bg-[#A12124] text-white shadow-md shadow-[#A12124]/20" 
-          : "text-white/70 hover:bg-white/10 hover:text-white"
-      }`}
+      className={`
+        group relative flex items-center gap-3
+        w-full py-3 px-4 rounded-2xl
+        transition-all duration-200
+
+        ${
+          active
+            ? "bg-gradient-to-r from-[#A12124] to-[#7f1d1d] text-white shadow-lg shadow-red-900/20"
+            : "text-gray-400 hover:bg-white/5 hover:text-white"
+        }
+      `}
     >
+      {active && (
+        <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-white" />
+      )}
+
       {icon}
-      <span className="text-sm font-medium">{label}</span>
+
+      <span className="text-sm font-medium">
+        {label}
+      </span>
     </button>
   );
 }
