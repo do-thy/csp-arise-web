@@ -5,7 +5,6 @@ import { useRouter, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   School,
-  DoorOpen,
   Box,
   Users,
   Settings,
@@ -13,7 +12,7 @@ import {
   X,
   ChevronDown,
   MapPinned,
-  Link,
+  Map,
 } from "lucide-react";
 
 interface NavItemProps {
@@ -37,24 +36,15 @@ export default function AdminSidebar() {
       {/* MOBILE TOP BAR */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-[60] flex items-center justify-between bg-[#111827] border-b border-white/5 px-5 py-4">
         <div>
-          <h1 className="text-white font-bold tracking-wide">
-            ARISE CMS
-          </h1>
-
-          <p className="text-[11px] text-gray-400">
-            Indoor Navigation System
-          </p>
+          <h1 className="text-white font-bold tracking-wide">ARISE CMS</h1>
+          <p className="text-[11px] text-gray-400">Indoor Navigation System</p>
         </div>
 
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="p-2 rounded-xl hover:bg-white/5 transition"
         >
-          {isOpen ? (
-            <X size={22} className="text-white" />
-          ) : (
-            <Menu size={22} className="text-white" />
-          )}
+          {isOpen ? <X size={22} className="text-white" /> : <Menu size={22} className="text-white" />}
         </button>
       </div>
 
@@ -65,7 +55,6 @@ export default function AdminSidebar() {
           bg-[#111827] border-r border-white/5
           transform transition-transform duration-300 ease-in-out
           flex flex-col
-
           lg:translate-x-0
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -76,20 +65,14 @@ export default function AdminSidebar() {
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#A12124] to-[#7f1d1d] flex items-center justify-center shadow-lg shadow-red-900/20">
               <MapPinned size={24} className="text-white" />
             </div>
-
             <div>
-              <h1 className="text-xl font-bold text-white tracking-wide">
-                ARISE CMS
-              </h1>
-
-              <p className="text-xs text-gray-500 mt-1">
-                Indoor Navigation System
-              </p>
+              <h1 className="text-xl font-bold text-white tracking-wide">ARISE CMS</h1>
+              <p className="text-xs text-gray-500 mt-1">Indoor Navigation System</p>
             </div>
           </div>
         </div>
 
-        {/* NAVIGATION */}
+        {/* NAVIGATION LINKS */}
         <div className="flex flex-col mt-8 gap-2 px-4 h-full overflow-y-auto">
           <NavItem
             icon={<LayoutDashboard size={20} />}
@@ -101,30 +84,17 @@ export default function AdminSidebar() {
             }}
           />
 
-          {/* CAMPUSES */}
+          {/* CAMPUSES DROPDOWN */}
           <div>
             <button
               onClick={() => setShowCampuses(!showCampuses)}
-              className="
-                flex items-center justify-between
-                w-full py-3 px-4 rounded-2xl
-                text-gray-400 hover:bg-white/5 hover:text-white
-                transition-all duration-200
-              "
+              className="flex items-center justify-between w-full py-3 px-4 rounded-2xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-200"
             >
               <div className="flex items-center gap-3">
                 <School size={20} />
-                <span className="text-sm font-medium">
-                  Campuses
-                </span>
+                <span className="text-sm font-medium">Campuses</span>
               </div>
-
-              <ChevronDown
-                size={16}
-                className={`transition-transform duration-200 ${
-                  showCampuses ? "rotate-180" : ""
-                }`}
-              />
+              <ChevronDown size={16} className={`transition-transform duration-200 ${showCampuses ? "rotate-180" : ""}`} />
             </button>
 
             {showCampuses && (
@@ -134,27 +104,16 @@ export default function AdminSidebar() {
                     router.push("/admin/digi");
                     setIsOpen(false);
                   }}
-                  className="
-                    text-left py-2 px-3 rounded-xl
-                    text-sm text-gray-400
-                    hover:bg-white/5 hover:text-white
-                    transition
-                  "
+                  className="text-left py-2 px-3 rounded-xl text-sm text-gray-400 hover:bg-white/5 hover:text-white transition"
                 >
                   DigiCampus
                 </button>
-
                 <button
                   onClick={() => {
                     router.push("/admin/main");
                     setIsOpen(false);
                   }}
-                  className="
-                    text-left py-2 px-3 rounded-xl
-                    text-sm text-gray-400
-                    hover:bg-white/5 hover:text-white
-                    transition
-                  "
+                  className="text-left py-2 px-3 rounded-xl text-sm text-gray-400 hover:bg-white/5 hover:text-white transition"
                 >
                   Main Campus
                 </button>
@@ -162,22 +121,13 @@ export default function AdminSidebar() {
             )}
           </div>
 
+          {/* UNIFIED MAP EDITOR BUTTON */}
           <NavItem
-            icon={<DoorOpen size={20} />}
-            label="Rooms"
-            active={isActive("/admin/rooms")}
+            icon={<Map size={20} />}
+            label="Map Editor"
+            active={isActive("/admin/map-editor")}
             onClick={() => {
-              router.push("/admin/rooms");
-              setIsOpen(false);
-            }}
-          />
-
-          <NavItem
-            icon={<Link size={20} />}
-            label="Links"
-            active={isActive("/admin/links")}
-            onClick={() => {
-              router.push("/admin/links");
+              router.push("/admin/map-editor");
               setIsOpen(false);
             }}
           />
@@ -217,51 +167,27 @@ export default function AdminSidebar() {
         </div>
       </aside>
 
-      {/* OVERLAY */}
+      {/* MOBILE OVERLAY BACKDROP */}
       {isOpen && (
-        <div
-          className="
-            fixed inset-0 z-40
-            bg-black/60 backdrop-blur-sm
-            lg:hidden
-          "
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setIsOpen(false)} />
       )}
     </>
   );
 }
 
-function NavItem({
-  icon,
-  label,
-  active,
-  onClick,
-}: NavItemProps) {
+function NavItem({ icon, label, active, onClick }: NavItemProps) {
   return (
     <button
       onClick={onClick}
-      className={`
-        group relative flex items-center gap-3
-        w-full py-3 px-4 rounded-2xl
-        transition-all duration-200
-
-        ${
-          active
-            ? "bg-gradient-to-r from-[#A12124] to-[#7f1d1d] text-white shadow-lg shadow-red-900/20"
-            : "text-gray-400 hover:bg-white/5 hover:text-white"
-        }
-      `}
+      className={`group relative flex items-center gap-3 w-full py-3 px-4 rounded-2xl transition-all duration-200 ${
+        active
+          ? "bg-gradient-to-r from-[#A12124] to-[#7f1d1d] text-white shadow-lg shadow-red-900/20"
+          : "text-gray-400 hover:bg-white/5 hover:text-white"
+      }`}
     >
-      {active && (
-        <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-white" />
-      )}
-
+      {active && <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-white" />}
       {icon}
-
-      <span className="text-sm font-medium">
-        {label}
-      </span>
+      <span className="text-sm font-medium">{label}</span>
     </button>
   );
 }

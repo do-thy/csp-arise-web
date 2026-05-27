@@ -48,10 +48,10 @@ export default function MainLayout({
   }, []);
 
   const { unityProvider, isLoaded, sendMessage } = useUnityContext({
-    loaderUrl: "/unity-build/sdca_virtual_tour.loader.js",
-    dataUrl: "/unity-build/sdca_virtual_tour.data",
-    frameworkUrl: "/unity-build/sdca_virtual_tour.framework.js",
-    codeUrl: "/unity-build/sdca_virtual_tour.wasm",
+    loaderUrl: "https://firebasestorage.googleapis.com/v0/b/arise-authentication-fda17.firebasestorage.app/o/unity-build%2Fsdca_virtual_tour.loader.js?alt=media",
+    dataUrl: "https://firebasestorage.googleapis.com/v0/b/arise-authentication-fda17.firebasestorage.app/o/unity-build%2Fsdca_virtual_tour.data?alt=media",
+    frameworkUrl: "https://firebasestorage.googleapis.com/v0/b/arise-authentication-fda17.firebasestorage.app/o/unity-build%2Fsdca_virtual_tour.framework.js?alt=media",
+    codeUrl: "https://firebasestorage.googleapis.com/v0/b/arise-authentication-fda17.firebasestorage.app/o/unity-build%2Fsdca_virtual_tour.wasm?alt=media",
   });
 
   const slugOrder = ["maincampus", "gd1", "gd2", "gd3", "digicampus"];
